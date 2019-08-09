@@ -1,0 +1,15 @@
+<h2>亲爱的{{ user.username }}</h2>
+<div style="border: #0c6dc4 1px solid;border-radius: 10px">
+    <p>登录时间：<b>{{ login_time }}</b></p>
+    <p style="color: red">如果是不是本人操作,请尽快修改密码,或采取紧急措施！</p>
+    <p>
+        <button><a
+                href="{{ url_for('login_bp.confirm_login', token=token, _external=True) }}"><b>点击这里</b></a></button>
+        可以进行登录激活
+    </p>
+    <p>如果无法点击，你也可以将下面的地址复制到浏览器中打开:</p>
+    <p>{{ url_for('login_bp.confirm_login', token=token, _external=True) }}</p>
+    <p>
+        <small>!!!注意，请不要回复此邮件哦~</small>
+    </p>
+</div>

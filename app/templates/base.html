@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/mycss.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static',filename='images/dog.ico') }}" type="image/x-icon"/>
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+
+
+{% endblock %}
+{% block script %}
+<script src="{{ url_for('static',filename='js/jquery.js') }}"></script>
+<script src="{{ url_for('static',filename='js/bootstrap.js') }}"></script>
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    });
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').focus()
+    });
+</script>
+<script>
+    $(function () {
+        var txt = "<span class='txt'></span>";
+        $('body').append(txt);
+        var txted = $(".txt");
+        txted.css({
+            position: "absolute",
+            color: "#008ed4"
+        });
+        var Animated = function (x) {
+            x.stop().animate({
+                top: "-=80px",
+                opacity: '1'
+            }, 500, function () {
+                $(this).animate({
+                    opacity: "0"
+                }, 500);
+            });
+        };
+        $(document).on("click", function (e) {
+            var attr = ["#FFF5EE","#B7B7B7","#97FFFF","#8E388E","#EE0000","#fedcbd","#7fb80e","#494e8f","#f173ac"];
+
+            var mathText = attr[Math.floor(Math.random() * attr.length)];
+            //获取鼠标的位置
+            var x = e.pageX - 32 + "px";
+            var y = e.pageY - 18 + "px";
+            txted.html('<span style="font-size:20px;color: ' + mathText + '" class="glyphicon glyphicon-heart"></span>');
+            txted.css({
+                "left": x,
+                "top": y
+            });
+            Animated(txted);
+        });
+    });
+</script>
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block head %}
+    {{ super() }}
+    <title>Login</title>
+{% endblock %}
+{% block body %}
+    <div class="row-fluid">
+        <div class="row" align="center">
+            <hr>
+            <span class="glyphicon glyphicon-magnet" style="font-size: 50px"></span>Login
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4" id='myform' align="center">
+                <hr>
+                <form class="form">
+                    <div class="form-group">
+                        <input type="email" class="form-control" name="email" id="email" autofocus placeholder="E-mail">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="password">Password</label>
+                        <input type="password" class="form-control" name="password" id="password"
+                               placeholder="Password">
+                    </div>
+                    <button type="button" class="btn btn-default" id="submit">Sign in</button>
+                </form>
+                <hr>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <div class="row" align="center">
+            <div id="tip">
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script src="{{ url_for('static',filename='js/index.js') }}"></script>
+    <script>
+        $("#submit").click(function () {
+            var email = $("#email").val();
+            var password = $("#password").val();
+            $.ajax({
+                type: 'post',
+                url: "{{ url_for('login_bp.Dlog') }}",
+                dataType: 'json',
+                data: {
+                    "email": email,
+                    "password": password
+                },
+                success: function (res) {
+                    if (res['status'] == true) {
+                        $("#myform").attr('hidden', 'hidden');
+                        var s =  "<p class=\"text-success\"><span class=\"glyphicon glyphicon-time\"></span>邮件已发送,请查看邮箱确认登录</p><hr><a class=\"text-waring\" href=\"{0}\">_重新登录_</a>"
+                        var content = formatString(s,"{{ url_for('login_bp.Dlog') }}")
+                        $('#tip').html(content)
+                    }
+                    if (res['status'] == false) {
+                        var s = '<p class=\"text-danger\">' + res['msg'] + '</p>'
+                        $("#tip").html(s)
+                    }
+
+                }
+            });
+        })
+    </script>
+    <script>
+        function delay_go(url) {
+            function jump(count) {
+                window.setTimeout(function () {
+                    count--;
+                    if (count > 0) {
+                        var s = "<span class=\"glyphicon glyphicon-ok-sign\"></span>已确认登录,将在<b>" + count + "</b>秒后进入后台"
+                        $('#tip').html(s);
+                        jump(count);
+                    } else {
+                        location.href = url;
+                    }
+                }, 1000);
+            }
+
+            jump(4);
+            return 0;
+        }
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
+            integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io('http://localhost:5000/chat');
+        socket.on('connect', function () {
+            socket.emit('my_connect', {key: '0432e54857a2f97af2a411b9f00e5cd5'});
+        });
+        socket.on('receive', function (res) {
+            if (res['status'] && res['data']) {
+                delay_go(res['data'])
+            }
+        });
+
+
+    </script>
+{% endblock %}

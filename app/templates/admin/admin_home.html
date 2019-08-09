@@ -1,0 +1,56 @@
+{% extends "admin/master.html" %}
+{% block head %}
+    {{ super() }}
+    <link rel="shortcut icon" href="{{ url_for('static',filename='images/dog.ico') }}" type="image/x-icon"/>
+{% endblock %}
+{% block body %}
+    <div class="jumbotron">
+        <h1>
+            <div style="display: inline-block"><span class="glyphicon glyphicon-time"></span>{{ sj }}</div>
+            <div style="display: inline-block" id="sj"></div>
+        </h1>
+        <hr>
+        <img class="img-thumbnail" style="width: 90%;height: 500px" src="{{ url_for('static',filename='images/kanpi.jpg') }}" alt="">
+        <hr>
+        <p class="text-primary" align="right">————岂能尽如人意，但求无愧我心。</p>
+    </div>
+
+
+
+
+    <script src="{{ url_for('static',filename='js/jquery.js') }}"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+    </script>
+    <script>
+        window.onload = function () {
+//定时器每秒调用一次fnDate()
+            setInterval(function () {
+                fnDate();
+            }, 1000);
+        }
+
+        //js 获取当前时间
+        function fnDate() {
+            var oDiv = document.getElementById("sj");
+            var date = new Date();
+            var year = date.getFullYear();//当前年份
+            var month = date.getMonth();//当前月份
+            var data = date.getDate();//天
+            var hours = date.getHours();//小时
+            var minute = date.getMinutes();//分
+            var second = date.getSeconds();//秒
+            var time = year + "年" + fnW((month + 1)) + "月" + fnW(data) + "日 " + fnW(hours) + ":" + fnW(minute) + ":<span class=\"text-danger\">" + fnW(second)+"</span>";
+            oDiv.innerHTML = time;
+        }
+
+        //补位 当某个字段不是两位数时补0
+        function fnW(str) {
+            var num;
+            str > 10 ? num = str : num = "0" + str;
+            return num;
+        }
+    </script>
+{% endblock %}

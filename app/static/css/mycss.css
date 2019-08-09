@@ -1,0 +1,6 @@
+.nav_img{
+    height: 20px;
+    width: 20px;
+}
+
+a.cur:active {color: #FF0000;}

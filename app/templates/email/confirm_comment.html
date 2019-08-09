@@ -1,0 +1,14 @@
+<h2>Dlog</h2>
+<div style="border: #0c6dc4 1px solid;border-radius: 10px">
+    <p style="color: red">如果是不是本人操作,请忽略！</p>
+    <p>
+        <button><a
+                href="{{ url_for('blog_bp.yourname', token=token, _external=True) }}"><b>点击这里</b></a></button>
+        可以进行Dlog的留言检验
+    </p>
+    <p>如果无法点击，你也可以将下面的地址复制到浏览器中打开:</p>
+    <p>{{ url_for('blog_bp.yourname', token=token, _external=True) }}</p>
+    <p>
+        <small>!!!注意，请不要回复此邮件哦~</small>
+    </p>
+</div>

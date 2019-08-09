@@ -1,0 +1,386 @@
+{% extends 'base.html' %}
+{% block head %}
+    {{ super() }}
+    <title>Dlog-Faithforus</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='md/css/editormd.preview.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/fenye.css') }}"/>
+    <style>
+        .selected {
+            font-weight: bold;
+            background-color: rgba(51, 122, 183, 0.2);
+            border-radius: 10px;
+        }
+
+        .flao_mytab {
+            position: fixed;
+            top: 60px;
+            left: 0;
+
+        }
+
+        .flao_mycategory {
+            position: fixed;
+            top: 60px;
+            right: 0;
+
+        }
+
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        {#    nav#}
+        <div class="row" style="margin-bottom: 50px">
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">
+                            <span class="glyphicon glyphicon-magnet" style="font-size: 25px"></span>
+                        </a>
+                    </div>
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#">
+                            Faith for us
+                        </a>
+                    </div>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <form class="navbar-form navbar-right">
+                            <div class="form-group">
+                                <input type="text" id="search_text" class="form-control" placeholder="Search">
+                            </div>
+                            <button type="button" class="btn btn-default" id="search"><span
+                                    class="glyphicon glyphicon-search"></span></button>
+                        </form>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="https://github.com/Faithforus" target="_blank"><img class="nav_img"
+                                                                                             src="{{ url_for('static',filename='images/github.png') }}"
+                                                                                             alt="github"></a></li>
+                            <li><a href="mailto:ljunf817@163.com" tabindex="0" data-toggle="popover"
+                                   data-placement="bottom"
+                                   title="Email" data-content="ljunf817@163.com"><img class="nav_img"
+                                                                                      src="{{ url_for('static',filename='images/邮箱.png') }}"
+                                                                                      alt="email"></a></li>
+
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        </div>
+        {#        img#}
+        <div class="row">
+            <div class="center-block" align="center">
+                <img src="{{ url_for('static',filename='images/dance.gif') }}" style="width: 50%;height: 250px;"
+                     alt="..." class="img-rounded">
+
+                <hr>
+            </div>
+        </div>
+
+        {#---------------------------------------------------------------------------------------#}
+
+        <div class="row">
+            {#            article_list#}
+            <div class="col-md-2">
+                <ul class="nav nav-pills nav-stacked" id="myTabs" role="tablist">
+                    <li role="presentation" class="blog-title selected">
+                        <a id="home-tab"><span class="glyphicon glyphicon-home"></span>&nbsp;主页</a></li>
+                </ul>
+            </div>
+
+            {#            article_body#}
+            <div class="col-md-8">
+                {#            md doc#}
+                <div class="jumbotron tab-content">
+                    <div class="tab-pane fade active in" id="myTabContent">
+                        <textarea readonly placeholder="markdown语言">{{ home_page }}</textarea>
+                    </div>
+                </div>
+                {#                comment edit#}
+                <div>
+                    <textarea class="form-control" id="comment_edit" style="resize:none" rows="5"
+                              placeholder="留言..."></textarea>
+                </div>
+                <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target="#comment_email"
+                        style="width: 100%">留言.
+                </button>
+                {#                comment#}
+                <div>
+                    <ul class="list-group" id="comment">
+                        {% if home_comment %}
+                            {% for comment in home_comment %}
+                                <li class="list-group-item"><p class="text-warning">{{ comment['guest_name'] }}<span
+                                        class="badge">{{ comment['create_time'] }}</span></p>
+                                    <p class="text-muted">{{ comment['comment'] }}</p></li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+                {#                分页#}
+                <div id="ele">
+                    <div class="Pagination"></div>
+                </div>
+
+            </div>
+
+            {#            panel#}
+            <div class="col-md-2">
+                {#                1 panel#}
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <span class="glyphicon glyphicon-triangle-bottom"></span>&nbsp;Profile
+                    </div>
+                    <div class="panel-footer">
+                        <table class="table">
+                            <tr>
+                                <td>昵称</td>
+                                <td>Faithforus</td>
+                            </tr>
+                            <tr>
+                                <td>标签</td>
+                                <td>倔强、青铜、极简主义</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                {#                2 panel#}
+                <div class="panel panel-default" id="mycategory">
+                    <div class="panel-body">
+                        <span class="glyphicon glyphicon-triangle-bottom"></span>&nbsp;Tag
+                    </div>
+                    <div class="panel-footer">
+                        {% if category %}
+                            <ul class="list-group">
+                                {% for c in category %}
+                                    <li class="list-group-item">
+                                        <button class="btn btn-danger tag" id="{{ c[0] }}" type="button">
+                                            {{ c[0] }} <span class="badge">{{ c[1] }}</span>
+                                        </button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#    footer#}
+        <div class="row">
+
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="comment_email" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Enter your E-mail...</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="email" class="form-control" id="guest_email" required placeholder="Email">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="submit_comment()">确认</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+{% block script %}
+    {{ super() }}
+    <script src="{{ url_for('static',filename='md/lib/marked.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='md/lib/prettify.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='md/lib/raphael.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='md/lib/underscore.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='md/lib/sequence-diagram.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='md/lib/flowchart.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='md/lib/jquery.flowchart.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='md/editormd.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/index.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/fenye.js') }}"></script>
+    <script>
+        {#浮动左侧文章列表#}
+        var mytab_top = $("#myTabs").offset().top;
+        var mycategory_top = $("#mycategory").offset().top;
+        window.onscroll = function () {
+            var sc_top = $(document).scrollTop()
+            if (sc_top > mytab_top) {
+                $("#myTabs").addClass('flao_mytab col-md-2')
+            }
+            if (sc_top < mytab_top) {
+                $("#myTabs").removeClass('flao_mytab col-md-2')
+            }
+            ;
+            {#浮动右侧分类列表#}
+
+            if (sc_top > mycategory_top) {
+                $("#mycategory").addClass('flao_mycategory col-md-2')
+            }
+            if (sc_top < mycategory_top) {
+                $("#mycategory").removeClass('flao_mycategory col-md-2')
+            }
+
+        };
+
+
+    </script>
+    <script>
+        function appendComment(comment) {//新增留言
+            var raw_s = '<li class="list-group-item"><p class="text-warning">{0}<span class="badge">{1}</span></p>' +
+                '<p class="text-muted">{2}</p></li>'
+            var res_s = formatString(raw_s, comment['guest_name'], comment['create_time'], comment['comment'])
+            $("#comment").append(res_s);
+        };
+
+        function loadComment(comment) {//加载历史留言
+            $("#comment").empty();
+            for (var i in comment) {
+                var raw_s = '<li class="list-group-item"><p class="text-warning">#{0}&nbsp;{1}&nbsp;<span class="badge">{2}</span></p>' +
+                    '<p class="text-muted">{3}</p></li>'
+                var res_s = formatString(raw_s, lou, comment[i]['guest_name'], comment[i]['create_time'], comment[i]['comment'])
+                $("#comment").append(res_s);
+            }
+
+        };
+    </script>
+    <script>
+        function submit_comment() {//提交留言
+            var code = $("li.blog-title.selected a").attr('id');
+            var texts = $("#comment_edit").val();
+            var email = $("#guest_email").val();
+            var data1 = {"code": code, "text": texts, "email": email};
+            $.ajax({
+                type: "post",
+                url: "{{ url_for('blog_bp.comment') }}",
+                data: data1,
+                dataType: 'json',
+                success: function (res) {
+                    if (res['status']) {
+                        appendComment(res['data'])
+                        alert(res['msg'])
+                        $('#comment_email').modal('hide')
+                    }
+                    if (res['status'] == false) {
+                        alert(res['msg'])
+                    }
+
+                },
+                error:function(){
+                    alert("留言次数已达上限")
+                }
+            })
+        }
+
+    </script>
+
+    <script>
+        function appendBlogLi(res) {
+            {#添加文章标题列表#}
+            $("#myTabs").empty();
+            var raw_s =
+                '<li role="presentation" class="blog-title"><a id="{0}"><span class="glyphicon glyphicon-tag"></span>&nbsp;{1}<br><span class="badge">{2}</span></a> </li>'
+            for (var prop in res) {
+                var res_s = formatString(raw_s, res[prop]['blog_id'], res[prop]['title'], res[prop]['create_time']);
+                $("#myTabs").append(res_s)
+            }
+            ;
+            $(".blog-title a").click(function () {
+                {#渲染文章#}
+                var code = $(this).attr('id')
+                var parent_node = $(this).parent(); //获取li 标签
+                parent_node.siblings('li').removeClass('selected');  // 删除其他兄弟元素的样式
+                parent_node.addClass('selected');                     // 添加当前元素的样式
+                $.ajax({
+                    type: "post",
+                    url: "{{ url_for('index_bp.get_blog_detail') }}",
+                    data: {"code": code},
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res['status']) {
+                            $("#myTabContent").html(res['data']['bolg_title'][0]) //渲染内容
+                            loadComment(res['data']['comment'])  //渲染评论
+                        }
+                    },
+                    error:function () {
+                        {#alert("")#}
+                    }
+                })
+                return false;
+            })
+        }
+    </script>
+    <script>
+        $(".tag").click(function () {
+            {#获取某类别文章#}
+            var code = $(this).attr('id');
+            $.ajax({
+                type: "post",
+                url: "{{ url_for('index_bp.get_blog_list') }}",
+                data: {"code": code},
+                dataType: 'json',
+                success: function (res) {
+                    if (res['status']) {
+                        appendBlogLi(res['data'])　//渲染左侧文章列表
+                    }
+
+                }
+            })
+        })
+    </script>
+    <script>
+        $("#search").click(function () {
+            var keyword = $('#search_text').val()
+            if (keyword == "") {
+                alert('你还没告诉我要找什么～');
+                return;
+            }
+            $.ajax({
+                type: "post",
+                url: "{{ url_for('index_bp.search') }}",
+                data: {"keyword": keyword},
+                dataType: 'json',
+                success: function (res) {
+                    if (res['status']) {
+                        appendBlogLi(res['data'])//搜索成功
+                    }
+                    if (res['status'] == false) {
+                        alert(res['msg'])//无结果
+                    }
+
+
+                }
+            })
+        })
+    </script>
+    <script type="text/javascript">
+        var testEditor;
+        $(function () {
+            testEditor = editormd.markdownToHTML("myTabContent", {//注意：这里是上面DIV的id
+                htmlDecode: "style,script,iframe",
+                emoji: true,
+                taskList: true,
+                tocm: true,
+                tex: true, // 默认不解析
+                flowChart: true, // 默认不解析
+                sequenceDiagram: true, // 默认不解析
+                codeFold: true
+            });
+        });
+    </script>
+{% endblock %}

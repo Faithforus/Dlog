@@ -1,0 +1,132 @@
+{% extends 'md_temp.html' %}
+{% block head %}
+    {{ super() }}
+    <link rel="shortcut icon" href="{{ url_for('static',filename='images/dog.ico') }}" type="image/x-icon"/>
+
+{% endblock %}
+{% block body %}
+    <div>
+        <hr>
+        <form action="{{ url_for('publish.publish') }}" method="post">
+            <div class="row" style="width: 90%;margin-top:1%">
+                <div class="col-md-1" style="margin-left: 5%">
+                    <a class="btn btn-warning" data-toggle="modal" data-target="#myModal"><span
+                            class="glyphicon glyphicon-log-out"></span></a>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="sr-only" for="title">title</label>
+                        <div class="input-group">
+                            <div class="input-group-addon">博客标题</div>
+                            <input type="text" class="form-control" id="title" name="title" required
+                                   value="{{ title }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" list="category_list" name="category" id="category"
+                           placeholder="类别">
+                    <datalist id="category_list">
+                        <option value="Python">Python</option>
+                        <option value="JavaScript">JavaScript</option>
+                        <option value="PHP">PHP</option>
+                        <option value="HTML5">HTML5</option>
+                        <option value="Mysql">Mysql</option>
+                        <option value="Flask">Flask</option>
+                    </datalist>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-success" name="submit"><span class="glyphicon glyphicon-edit">发布博客</span></button>
+                </div>
+            </div>
+            <div class="row">
+                <div id="my-editormd">
+                    <textarea class="editormd-markdown-textarea" name="doc" id="doc">{{ body }}</textarea>
+                    <textarea class="editormd-html-textarea" name="html" id="html">{{ body }}</textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    {#msg#}
+    {% if msg %}
+        <div class="panel panel-default" id="msg" style="position: fixed;top: 30%;left: 45%;z-index: 55">
+            <div class="panel-body">
+                {% if msg['status'] %}
+                    <p class="text-info" style="font-size: large"><span
+                            class="glyphicon glyphicon-ok"></span> {{ msg['msg'] }}</p>
+                {% else %}
+                    <p class="text-danger" style="font-size: large"><span
+                            class="glyphicon glyphicon-remove"></span> {{ msg['msg'] }}</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">怎么回事小老弟～</h4>
+                </div>
+                <div class="modal-body">
+                    如果现在返回,记录将会丢失,你确定还要继续吗?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="yes" class="btn btn-danger" data-dismiss="modal">确定</button>
+                    <button type="button" id="cancle" data-dismiss="modal" aria-label="Close" class="btn btn-success">
+                        取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript">
+        var testEditor;
+        $(function () {
+            testEditor = editormd("my-editormd", {
+                placeholder: "开始编写博客吧",
+                width: "90%",
+                height: 640,
+                syncScrolling: "single",
+                saveHTMLToTextarea: true,
+                path: "{{ url_for('static',filename='md/lib/') }}",
+                // 上传图片
+                imageUpload: true,
+                imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                // 上传图片时指定调用后台的视图函数
+                // homepage是蓝图 uploads是访问url
+                imageUploadURL: "{{ url_for('blog_bp.uploads') }}",
+
+            });
+        });
+    </script>
+    <script>
+        {#防止刷新#}
+        window.addEventListener('beforeunload', (event) => {
+            // Cancel the event as stated by the standard.
+            event.preventDefault();
+            // Chrome requires returnValue to be set.
+            event.returnValue = '';
+        });
+    </script>
+    <script>
+        $("#yes").click(function () {
+            window.location.href = '{{ url_for('admin.index') }}'
+        })
+    </script>
+    <script>
+        $(function () {
+            setTimeout(function () {
+                $("#msg").css('display', 'none');
+            }, 3000);
+        })
+    </script>
+{% endblock %}

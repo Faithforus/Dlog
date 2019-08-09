@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dlog留言</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static',filename='images/dog.ico') }}" type="image/x-icon"/>
+</head>
+<body>
+<div>
+    <div class="col-md-4"></div>
+    <div class="col-md-4 center-block" align="center" style="margin-top: 10%">
+        <div class="panel panel-default">
+            <div class="panel-heading"><span class="glyphicon glyphicon-magnet"></span> Dlog留言邮箱确认</div>
+            <div class="panel-body">
+                {% if msg %}
+                    <h3><span class="glyphicon glyphicon-ok-circle">&nbsp;{{ msg }}</span></h3>
+                {% else %}
+                    {% if error %}
+                        <h3><span class=" glyphicon glyphicon-remove-circle">&nbsp;{{ error }}</span></h3>
+                    {% endif %}
+                    <form action="{{ url_for('blog_bp.active_comment') }}" method="post">
+                        <input type="text" value="{{ token }}" id="token" name="token" hidden>
+                        <input class="form-control" type="text" value="" id="nickname" name="nickname">
+                        <hr>
+                        <button class="btn btn-success "><span class="glyphicon glyphicon-send">&nbsp;</span>提交</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+</body>
+</html>
